@@ -8,4 +8,12 @@ export class AuthenticationService {
 
   private baseUrl : string = "https://localhost:7224/api/User/"
   constructor(private http : HttpClient) { }
+
+  signUp(userObject : any) {
+    return this.http.post<any>(`${this.baseUrl}register`, userObject);
+  }
+
+  login(loginObject : any) {
+    return this.http.post<any>(`${this.baseUrl}authenticate`, loginObject);
+  }
 }

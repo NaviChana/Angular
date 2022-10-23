@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import ValidateForm from 'src/app/helpers/validateform';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
   isText : boolean = false;
   eyeIcon : string = "fa-eye-slash"
   loginForm! : FormGroup;
-  constructor(private fb : FormBuilder) { }
+  constructor(private fb : FormBuilder, private auth : AuthenticationService) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -28,7 +29,7 @@ export class LoginComponent implements OnInit {
     this.isText ? this.type = "text" : this.type = "password"
   }
 
-  onSubmit() {
+  onLogin() {
     if(this.loginForm.valid) {
       console.log(this.loginForm.value)
       //send obj to db and submit
