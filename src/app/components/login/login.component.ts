@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import ValidateForm from 'src/app/helpers/validateform';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -14,13 +15,17 @@ export class LoginComponent implements OnInit {
   isText : boolean = false;
   eyeIcon : string = "fa-eye-slash"
   loginForm! : FormGroup;
-  constructor(private fb : FormBuilder, private auth : AuthenticationService) { }
+  constructor(
+    private fb:FormBuilder, 
+    private auth:AuthenticationService, 
+    private router:Router,
+    private route:ActivatedRoute) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username : ['',Validators.required],
       password : ['',Validators.required]
-    })
+    });
   }
 
   hideShowPass() {
@@ -33,6 +38,17 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.valid) {
       console.log(this.loginForm.value)
       //send obj to db and submit
+      this.auth.login(this.loginForm.value)
+        .subscribe({
+          next:(res) => {
+            alert(res.message);
+            this.loginForm.reset();
+            this.router.navigate(['dashboard'])
+          }, 
+          error:(err) => {
+            alert(err?.error.message);
+          }
+        })
     } else {
       //throw error using toaster with required field
       ValidateForm.validateFormFields(this.loginForm)
